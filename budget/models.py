@@ -41,6 +41,8 @@ class Transaction(models.Model):
     store = models.ForeignKey(Store)
     category = models.ForeignKey(Category)
 
+    created_date = models.DateTimeField(auto_now_add=True)
+
     objects = TransactionManager()
 
     def __str__(self):

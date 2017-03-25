@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <title>Budget Categories</title>
+    </head>
+    <body>
+        {% if category_list %}
+            <h1>Budget Categories</h1>
+            {% for category in category_list %}
+                <table class="table">
+                    <tr>
+                        <td>{{ category.name }}</td>
+                        <td>{{ category.budget_amount }}</td>
+                    </tr>
+                </table>
+            {% endfor %}
+        {% else %}
+            <p>There are no categories!</p>
+        {% endif %}
+    </body>
+</html>
