@@ -3,10 +3,23 @@
         <title>Budget Categories</title>
     </head>
     <body>
-        {% if transaction_list %}
-            <p>There are Transactions?</p>
-        {% else %}
-            <p>There are no transactions!</p>
-        {% endif %}
+    {{ transaction_list }}}
+    {% if transaction_list %}
+        <table>
+            {% for trans in transaction_list %}
+                <tr>
+                    <td>{{ trans.purchase_date }}</td>
+                    <td>{{ trans.amount }}</td>
+                    <td>{{ trans.category }}</td>
+                    <td>{{ trans.store }}</td>
+                    <td>{{ trans.payment_method }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+
+    {% else %}
+        <p>There are no transactions!</p>
+    {% endif %}
     </body>
 </html>
