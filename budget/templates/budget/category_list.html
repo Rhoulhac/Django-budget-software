@@ -1,8 +1,8 @@
-<html>
-    <head>
-        <title>Budget Categories</title>
-    </head>
-    <body>
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <title>Budget Categories</title>
         {% if category_list %}
             <h1>Budget Categories</h1>
             {% for category in category_list %}
@@ -16,5 +16,4 @@
         {% else %}
             <p>There are no categories!</p>
         {% endif %}
-    </body>
-</html>
+{% endblock %}
