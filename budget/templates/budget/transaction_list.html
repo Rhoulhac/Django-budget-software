@@ -1,11 +1,30 @@
-<html>
-    <head>
-        <title>Budget Categories</title>
-    </head>
-    <body>
-    {{ transaction_list }}}
+{% extends 'base.html' %}
+
+
+{% block content %}
     {% if transaction_list %}
-        <table>
+
+        <form action="">
+            <select name="filter-category">
+                <option value=""></option>
+                {% for category in categories %}
+                    <option value="{{ category }}">{{ category }}</option>
+                {% endfor %}
+            </select>
+            <br><br>
+            <input type="submit">
+        </form>
+
+        <table class="table">
+            <thead class="table-header">
+                <tr>
+                    <th>Purchase Date</th>
+                    <th>Amount</th>
+                    <th>Category</th>
+                    <th>Store</th>
+                    <th>Payment Type</th>
+                </tr>
+            </thead>
             {% for trans in transaction_list %}
                 <tr>
                     <td>{{ trans.purchase_date }}</td>
@@ -20,6 +39,7 @@
 
     {% else %}
         <p>There are no transactions!</p>
+
     {% endif %}
-    </body>
-</html>
+
+{% endblock %}
