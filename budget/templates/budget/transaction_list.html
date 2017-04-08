@@ -2,44 +2,75 @@
 
 
 {% block content %}
-    {% if transaction_list %}
 
-        <form action="">
-            <select name="filter-category">
-                <option value=""></option>
-                {% for category in categories %}
-                    <option value="{{ category }}">{{ category }}</option>
+    <div class="col-md-5 margin-trans">
+        {% if filter %}
+            {% if transaction_list %}
+            <form action="">
+                <select name="filter-category">
+                    <option value=""></option>
+                    {% for category in categories %}
+                        <option value="{{ category }}">{{ category }}</option>
+                    {% endfor %}
+                </select>
+                <br><br>
+                <input type="submit">
+            </form>
+            {% endif %}
+        {% endif %}
+
+        {% if transaction_list %}
+            <table class="table">
+                <thead class="table-header">
+                    <tr>
+                        <th>Purchase Date</th>
+                        <th>Amount</th>
+                        <th>Category</th>
+                        <th>Store</th>
+                        <th>Payment Type</th>
+                    </tr>
+                </thead>
+                {% for trans in transaction_list %}
+                    <tr>
+                        <td>{{ trans.purchase_date }}</td>
+                        <td>{{ trans.amount }}</td>
+                        <td>{{ trans.category }}</td>
+                        <td>{{ trans.store }}</td>
+                        <td>{{ trans.payment_method }}</td>
+                    </tr>
                 {% endfor %}
-            </select>
-            <br><br>
-            <input type="submit">
-        </form>
-
-        <table class="table">
-            <thead class="table-header">
-                <tr>
-                    <th>Purchase Date</th>
-                    <th>Amount</th>
-                    <th>Category</th>
-                    <th>Store</th>
-                    <th>Payment Type</th>
-                </tr>
-            </thead>
-            {% for trans in transaction_list %}
-                <tr>
-                    <td>{{ trans.purchase_date }}</td>
-                    <td>{{ trans.amount }}</td>
-                    <td>{{ trans.category }}</td>
-                    <td>{{ trans.store }}</td>
-                    <td>{{ trans.payment_method }}</td>
-                </tr>
-            {% endfor %}
-        </table>
+            </table>
 
 
-    {% else %}
-        <p>There are no transactions!</p>
+        {% else %}
+            <p>There are no transactions!</p>
 
-    {% endif %}
+        {% endif %}
+    </div>
+    <div class="col-md-5 col-md-offset-1">
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: 38%;" aria-valuenow="38" aria-valuemin="0" aria-valuemax="100">Groceries 38%</div>
+        </div>
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Household 25%</div>
+        </div>
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Dining 25%</div>
+        </div>
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: 81%;" aria-valuenow="81" aria-valuemin="0" aria-valuemax="100">Gas 81%</div>
+        </div>
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Other 25%</div>
+        </div>
+    </div>
 
 {% endblock %}
+
+{% block after_javascript %}
+
+<script>
+</script>
+
+{% endblock after_javascript %}
+

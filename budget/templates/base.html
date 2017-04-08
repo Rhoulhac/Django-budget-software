@@ -18,13 +18,18 @@
             </a>
             <h1><a href="/">Budgeting Software</a></h1>
         </div>
-        <div class="content container">
+        <div class="container-fluid">
             <div class="row">
-                <div class="col-md-8">
-                    {% block content %}
-                    {% endblock %}
-                </div>
+                {% block content %}
+                {% endblock %}
             </div>
         </div>
+
+    {% block javascript %}
+
+    {% endblock javascript %}
+
+    {% block after_javascript %}{% endblock after_javascript %}
+
     </body>
 </html>
