@@ -29,7 +29,7 @@ class CurrentMonthAllListView(TransactionListView):
     def get_context_data(self, **kwargs):
         """ Transform queryset """
         kwargs = super().get_context_data(**kwargs)
-        kwargs['current'] = 'current'
+        kwargs['filter'] = 'current'
         return kwargs
 
 
@@ -46,6 +46,6 @@ class PreviousMonthAllListView(TransactionListView):
         """ Transform queryset """
         kwargs = super().get_context_data(**kwargs)
         catg = mymodels.Category.objects.all()
-        kwargs['previous'] = 'previous'
+        kwargs['filter'] = 'previous'
         kwargs['categories'] = catg
         return kwargs
