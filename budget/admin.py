@@ -9,6 +9,7 @@ admin.site.register(PaymentMethod)
 
 class TransactionAdmin(admin.ModelAdmin):
     list_display = ('purchase_date', 'amount', 'store', 'category', 'payment_method')
+    list_filter = ('category', 'store', 'payment_method')
 
 
 admin.site.register(Transaction, TransactionAdmin)
