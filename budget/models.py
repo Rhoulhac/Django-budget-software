@@ -1,7 +1,4 @@
-import datetime
-
 from django.db import models
-# from django.utils import timezone
 
 
 class Store(models.Model):
@@ -41,6 +38,7 @@ class Transaction(models.Model):
 
     class Meta:
         ordering = ['-purchase_date']
+
 
 class Savings(models.Model):
     name = models.CharField("Savings Category", unique=True, max_length=255)
