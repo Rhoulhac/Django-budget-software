@@ -5,18 +5,17 @@
 
     <div class="col-md-5 margin-trans">
         {% if filter %}
-            {% if transaction_list %}
-            <form action="">
+            <form method="GET">
+                <h2>Select a Category: </h2>
                 <select name="filter-category">
-                    <option value=""></option>
+                    <option value="">All</option>
                     {% for category in categories %}
                         <option value="{{ category }}">{{ category }}</option>
                     {% endfor %}
                 </select>
                 <br><br>
-                <input type="submit">
+                <input type="submit" value="Submit">
             </form>
-            {% endif %}
         {% endif %}
 
         {% if transaction_list %}
