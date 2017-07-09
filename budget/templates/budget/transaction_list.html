@@ -6,11 +6,15 @@
     <div class="col-md-5 margin-trans">
         {% if filter %}
             <form method="GET">
-                <h2>Select a Category: </h2>
-                <select name="filter-category">
+                <h2>Select a Category: {% if input %} {{ input }} {% endif %}</h2>
+                <select name="filter">
                     <option value="">All</option>
                     {% for category in categories %}
-                        <option value="{{ category }}">{{ category }}</option>
+                        {% if category == input %}
+                            <option value="{{ category }}" selected>{{ category }}</option>
+                        {% else %}
+                            <option value="{{ category }}">{{ category }}</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
                 <br><br>
@@ -46,25 +50,134 @@
 
         {% endif %}
     </div>
+
     <div class="col-md-5 col-md-offset-1">
-        {% for cat, nums in categories.items %}
-            {% if cat in displayed_budgets %}
-                {{ cat }} Budget: <strong> {{ nums.budg_amt }} </strong>
-                <div class="progress">
-                    <div class="progress-bar" role="progressbar" style="width: {{ nums.perc }}%;"
-                         aria-valuenow="{{ nums.perc }}" aria-valuemin="0" aria-valuemax="100">
-                        {{nums.spent}}</div>
-                </div>
-            {% endif %}
-        {% endfor %}
+        {% if not input %}
+            <div>
+                {% for cat, nums in categories.items %}
+                    {% if cat in displayed_budgets %}
+                        {{ cat }} Budget: <strong> {{ nums.budg_amt }} </strong>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: {{ nums.perc }}%;"
+                                 aria-valuenow="{{ nums.perc }}" aria-valuemin="0" aria-valuemax="100">
+                                {{nums.spent}}</div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div>
+            <h2>Pie chart</h2>
+            <canvas id="myChart" width="400" height="400"></canvas>
+        </div>
     </div>
+
 
 {% endblock %}
 
 {% block after_javascript %}
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+
 <script>
+
+    {% if filter == 'current' or filter == 'previous' %}
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+
+        // 12 color options - should be enough
+        var background = [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(191, 63, 63, 0.2)',
+        'rgba(191, 127, 63, 0.2)',
+        'rgba(127, 191, 63, 0.2)',
+        'rgba(63, 191, 191, 0.2)',
+        'rgba(191, 63, 191, 0.2)',
+        'rgba(140, 114, 127, 0.2)',
+        'rgba(227, 225, 93, 0.2)',
+        ]
+        var border = [
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(191, 63, 63, 1)',
+        'rgba(191, 127, 63, 1)',
+        'rgba(127, 191, 63, 1)',
+        'rgba(63, 191, 191, 1)',
+        'rgba(191, 63, 191, 1)',
+        'rgba(140, 114, 127, 1)',
+        'rgba(227, 225, 93, 1)',
+        ]
+
+        var labels = []
+        var data = []
+        var backgroundColor = []
+        var borderColor = []
+        var item = 0
+
+        {% if input %}
+            var text = '{{ input }} Spending'
+            {% for trans in transaction_list %}
+                // Find a way to combine amounts from the same store
+                labels.push("{{ trans.store|safe }}");
+                data.push({{ trans.amount }});
+                backgroundColor.push(background[item]);
+                borderColor.push(border[item]);
+                item++
+            {% endfor %}
+
+        {% else %}
+            var text = 'Category Spending'
+            {% for cat, nums in categories.items %}
+                labels.push('{{ cat }}');
+                data.push({{ nums.spent }});
+                backgroundColor.push(background[item]);
+                borderColor.push(border[item]);
+                item++
+            {% endfor %}
+
+        {% endif %}
+
+        var chart = new Chart(ctx, {
+            // The type of chart
+            type: 'pie',
+
+            // The data for categories
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    label: text,
+                    backgroundColor: backgroundColor,
+                    borderColor: borderColor,
+                    borderWidth: 1,
+                }]
+            },
+
+            // Configuration options go here
+            options: {
+                title: {
+                    display: true,
+                    text: text,
+                    position: 'bottom',
+                    fontSize: 20
+                },
+                legend: {
+                    labels: {
+                        fontSize: 16
+                    }
+                }
+            }
+        });
+    {% endif %}
 </script>
+
 
 {% endblock after_javascript %}
 
