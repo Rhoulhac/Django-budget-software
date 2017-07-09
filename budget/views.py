@@ -24,8 +24,8 @@ class CurrentMonthAllListView(TransactionListView):
             purchase_date__year=datetime.datetime.now().year,
             purchase_date__month=datetime.datetime.now().month
         ).order_by('-purchase_date')
-        if self.request.GET.get('filter-category'):
-            selection = self.request.GET.get('filter-category')
+        if self.request.GET.get('filter'):
+            selection = self.request.GET.get('filter')
             if selection == 'All':
                 return queryset
             else:
@@ -36,7 +36,8 @@ class CurrentMonthAllListView(TransactionListView):
     def get_context_data(self, **kwargs):
         """ Transform queryset """
         context = super().get_context_data(**kwargs)
-        q = self.request.GET.get('filter-category')
+        # Filter value
+        q = self.request.GET.get('filter')
         context['input'] = q
 
         # Get current month Category amounts
@@ -44,7 +45,7 @@ class CurrentMonthAllListView(TransactionListView):
             .filter(purchase_date__month=datetime.datetime.now().month)\
             .filter(purchase_date__year=datetime.datetime.now().year)
         cat_spending = {}
-        cats = mymodels.Category.objects.all()
+        cats = mymodels.Category.objects.all().exclude(name='MidAmerican').exclude(name='Indianola Utilities')
         for c in cats:
             cat_spending[c.name] = spending(c.name, trans=current_month_trans)
 
@@ -63,8 +64,8 @@ class PreviousMonthAllListView(TransactionListView):
             purchase_date__year=datetime.datetime.now().year,
             purchase_date__month=datetime.datetime.now().month - 1
         ).order_by('-purchase_date')
-        if self.request.GET.get('filter-category'):
-            selection = self.request.GET.get('filter-category')
+        if self.request.GET.get('filter'):
+            selection = self.request.GET.get('filter')
             if selection == 'All':
                 return queryset
             else:
@@ -75,13 +76,16 @@ class PreviousMonthAllListView(TransactionListView):
     def get_context_data(self, **kwargs):
         """ Transform queryset """
         context = super().get_context_data(**kwargs)
+        # Filter value
+        q = self.request.GET.get('filter')
+        context['input'] = q
 
         # Get previous month Category amounts
         previous_month_trans = mymodels.Transaction.objects \
             .filter(purchase_date__month=datetime.datetime.now().month - 1) \
             .filter(purchase_date__year=datetime.datetime.now().year)
         cat_spending = {}
-        cats = mymodels.Category.objects.all()
+        cats = mymodels.Category.objects.all().exclude(name='MidAmerican').exclude(name='Indianola Utilities')
         for c in cats:
             cat_spending[c.name] = spending(c.name, trans=previous_month_trans)
 
@@ -94,15 +98,31 @@ class PreviousMonthAllListView(TransactionListView):
 
 class ThreePreviousMonthsAllListView(TransactionListView):
 
+    def get_queryset(self):
+        """ Show Transactions for the previous 3 months """
+        queryset = mymodels.Transaction.objects.filter \
+            (purchase_date__month__gt=datetime.datetime.now().month - 3)
+        if self.request.GET.get('filter'):
+            selection = self.request.GET.get('filter')
+            if selection == 'All':
+                return queryset
+            else:
+                return queryset.filter(category__name=selection)
+        else:
+            return queryset
+
     def get_context_data(self, **kwargs):
         """ Transform queryset """
         context = super().get_context_data(**kwargs)
+        # Filter value
+        q = self.request.GET.get('filter')
+        context['input'] = q
 
         # Get last three months Category amounts
         three_month_trans = mymodels.Transaction.objects \
             .filter(purchase_date__month__gt=datetime.datetime.now().month - 3)
         cat_spending = {}
-        cats = mymodels.Category.objects.all()
+        cats = mymodels.Category.objects.all().exclude(name='MidAmerican').exclude(name='Indianola Utilities')
         for c in cats:
             cat_spending[c.name] = spending(c.name, trans=three_month_trans)
 
@@ -111,19 +131,6 @@ class ThreePreviousMonthsAllListView(TransactionListView):
         context['displayed_budgets'] = ['Groceries', 'Household', 'Dining', 'Gas (car)', 'Other']
 
         return context
-
-    def get_queryset(self):
-        """ Show Transactions for the previous 3 months """
-        queryset = mymodels.Transaction.objects.filter \
-            (purchase_date__month__gt=datetime.datetime.now().month - 3)
-        if self.request.GET.get('filter-category'):
-            selection = self.request.GET.get('filter-category')
-            if selection == 'All':
-                return queryset
-            else:
-                return queryset.filter(category__name=selection)
-        else:
-            return queryset
 
 
 def spending(category, trans):
