@@ -36,9 +36,6 @@ class CurrentMonthAllListView(TransactionListView):
     def get_context_data(self, **kwargs):
         """ Transform queryset """
         context = super().get_context_data(**kwargs)
-        # Filter value
-        q = self.request.GET.get('filter')
-        context['input'] = q
 
         # Get current month Category amounts
         current_month_trans = mymodels.Transaction.objects\
@@ -48,6 +45,16 @@ class CurrentMonthAllListView(TransactionListView):
         cats = mymodels.Category.objects.all().exclude(name='MidAmerican').exclude(name='Indianola Utilities')
         for c in cats:
             cat_spending[c.name] = spending(c.name, trans=current_month_trans)
+
+        if self.request.GET.get('filter'):
+            # Selected filter value
+            q = self.request.GET.get('filter')
+            context['input'] = q
+
+            # Queryset for graph
+            cat_set = current_month_trans.filter(category__name=q).values('store__name') \
+                .order_by('store__name').distinct().annotate(Sum('amount'))
+            context['filter_graph_set'] = cat_set
 
         context['filter'] = 'current'
         context['categories'] = cat_spending
@@ -76,9 +83,6 @@ class PreviousMonthAllListView(TransactionListView):
     def get_context_data(self, **kwargs):
         """ Transform queryset """
         context = super().get_context_data(**kwargs)
-        # Filter value
-        q = self.request.GET.get('filter')
-        context['input'] = q
 
         # Get previous month Category amounts
         previous_month_trans = mymodels.Transaction.objects \
@@ -88,6 +92,16 @@ class PreviousMonthAllListView(TransactionListView):
         cats = mymodels.Category.objects.all().exclude(name='MidAmerican').exclude(name='Indianola Utilities')
         for c in cats:
             cat_spending[c.name] = spending(c.name, trans=previous_month_trans)
+
+        if self.request.GET.get('filter'):
+            # Selected filter value
+            q = self.request.GET.get('filter')
+            context['input'] = q
+
+            # Queryset for graph
+            cat_set = previous_month_trans.filter(category__name=q).values('store__name') \
+                .order_by('store__name').distinct().annotate(Sum('amount'))
+            context['filter_graph_set'] = cat_set
 
         context['filter'] = 'previous'
         context['categories'] = cat_spending
