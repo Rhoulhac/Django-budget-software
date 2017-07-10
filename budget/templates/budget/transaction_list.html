@@ -123,10 +123,10 @@
 
         {% if input %}
             var text = '{{ input }} Spending'
-            {% for trans in transaction_list %}
+            {% for item in filter_graph_set %}
                 // Find a way to combine amounts from the same store
-                labels.push("{{ trans.store|safe }}");
-                data.push({{ trans.amount }});
+                labels.push("{{ item.store__name|safe }}");
+                data.push({{ item.amount__sum }});
                 backgroundColor.push(background[item]);
                 borderColor.push(border[item]);
                 item++
