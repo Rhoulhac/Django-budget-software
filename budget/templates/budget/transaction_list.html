@@ -52,24 +52,28 @@
     </div>
 
     <div class="col-md-5 col-md-offset-1">
-        {% if not input %}
-            <div>
-                {% for cat, nums in categories.items %}
-                    {% if cat in displayed_budgets %}
-                        {{ cat }} Budget: <strong> {{ nums.budg_amt }} </strong>
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: {{ nums.perc }}%;"
-                                 aria-valuenow="{{ nums.perc }}" aria-valuemin="0" aria-valuemax="100">
-                                {{nums.spent}}</div>
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            </div>
+        {% if filter %}
+            {% if not input %}
+                <div>
+                    {% for cat, nums in categories.items %}
+                        {% if cat in displayed_budgets %}
+                            {{ cat }} Budget: <strong> {{ nums.budg_amt }} </strong>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: {{ nums.perc }}%;"
+                                     aria-valuenow="{{ nums.perc }}" aria-valuemin="0" aria-valuemax="100">
+                                    {{nums.spent}}</div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if filter != 'pastthree' %}
+                <div>
+                    <h2>Pie chart</h2>
+                    <canvas id="myChart" width="400" height="400"></canvas>
+                </div>
+            {% endif %}
         {% endif %}
-        <div>
-            <h2>Pie chart</h2>
-            <canvas id="myChart" width="400" height="400"></canvas>
-        </div>
     </div>
 
 
