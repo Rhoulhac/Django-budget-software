@@ -1,31 +1,27 @@
-h1 a {
-    color: #FCA205;
-    font-family: 'Lobster';
-}
-
 body {
     padding-left: 15px;
 }
 
+.title {
+    color: #ffffff;
+    font-size: 24pt;
+    font-family: 'Lobster', cursive;
+    margin-right: 10px;
+}
+
+.navbar {
+    margin-bottom: 0px;
+}
+
 .page-header {
-    background-color: #ff9400;
+    background-color: #22CEEC;
     margin-top: 0;
     padding: 20px 20px 20px 40px;
 }
 
-.page-header h1, .page-header h1 a, .page-header h1 a:visited, .page-header h1 a:active {
-    color: #ffffff;
-    font-size: 36pt;
-    text-decoration: none;
-}
-
 .content {
-    margin-left: 40px;
-}
-
-h1, h2, h3, h4 {
-    font-family: 'Lobster', cursive;
-}
+    margin-left: 40px;/* bb */
+/./}
 
 .date {
     color: #828282;
@@ -42,7 +38,7 @@ h1, h2, h3, h4 {
 .top-menu, .top-menu:hover, .top-menu:visited {
     color: #ffffff;
     float: right;
-    font-size: 26pt;
+    font-size: 16pt;
     margin-right: 20px;
 }
 
