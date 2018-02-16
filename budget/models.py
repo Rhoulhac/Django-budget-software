@@ -30,19 +30,23 @@ class PaymentMethod(models.Model):
 
 
 class Transaction(models.Model):
-    store = models.ForeignKey(Store)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=6, decimal_places=2)
-    purchase_date = models.DateField("Purchase Date", blank=True, null=False)
-    category = models.ForeignKey(Category)
-    payment_method = models.ForeignKey(PaymentMethod)
+    purchase_date = models.DateField("Purchase Date", blank=True, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['-purchase_date']
+
+    def __str__(self):
+        return f'{self.purchase_date} {self.category} - {self.store}'
 
 
 class Savings(models.Model):
     name = models.CharField("Savings Category", unique=True, max_length=255)
     amount_saved = models.DecimalField(max_digits=6, decimal_places=2)
+    monthly_budgeted_amount = models.DecimalField(max_digits=6, decimal_places=2)
 
     class Meta:
         verbose_name_plural = 'savings'
