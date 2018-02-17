@@ -35,7 +35,7 @@ class Transaction(models.Model):
     purchase_date = models.DateField("Purchase Date", blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
-    notes = models.CharField("Note", max_length=255)
+    notes = models.CharField("Note", max_length=255, blank=True, null=True)
 
     class Meta:
         ordering = ['-purchase_date']
