@@ -15,7 +15,7 @@ class TransactionAdmin(admin.ModelAdmin):
 
     def purchase_date_and_store(self, obj):
         return f'{obj.purchase_date.strftime("%b %d")} - {obj.store}'
-    purchase_date_and_store.short_description = 'Date and Store'
+    purchase_date_and_store.short_description = 'Transaction'
 
 
 class SavingsAdmin(admin.ModelAdmin):
