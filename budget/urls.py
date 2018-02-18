@@ -5,6 +5,7 @@ from .views import CategoryListView, TransactionListView, CurrentMonthAllListVie
 
 
 urlpatterns = [
+    url(r'', TransactionListView.as_view()),
     url(r'^categories/$', CategoryListView.as_view()),
     url(r'^transactions/$', TransactionListView.as_view()),
     url(
