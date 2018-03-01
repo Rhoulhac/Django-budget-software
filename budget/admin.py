@@ -1,5 +1,3 @@
-import datetime
-
 from django.contrib import admin
 from django.contrib.admin.filters import DateFieldListFilter
 from django.utils import timezone
