@@ -46,14 +46,27 @@ class Transaction(models.Model):
 
 class Savings(models.Model):
     name = models.CharField("Savings Category", unique=True, max_length=255)
-    amount = models.DecimalField(max_digits=6, decimal_places=2)
+    total = models.DecimalField(max_digits=6, decimal_places=2)
     monthly_budgeted_amount = models.DecimalField(max_digits=6, decimal_places=2)
 
     class Meta:
         verbose_name_plural = 'savings'
+        ordering = ['-monthly_budgeted_amount']
 
     def __str__(self):
         return self.name
 
-    def monthly_savings(self):
-        pass
+
+class SavingsTransaction(models.Model):
+    store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=6, decimal_places=2)
+    transaction_date = models.DateField("Date", blank=True, null=True)
+    saving = models.ForeignKey(Savings, on_delete=models.CASCADE)
+    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
+    notes = models.CharField("Note", max_length=255, blank=True, null=True)
+
+    class Meta:
+        ordering = ['-transaction_date']
+
+    def __str__(self):
+        return f'{self.transaction_date} {self.saving} - {self.store}'

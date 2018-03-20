@@ -3,7 +3,7 @@ from django.contrib.admin.filters import DateFieldListFilter
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from .models import Store, Transaction, Category, Savings, PaymentMethod
+from .models import Store, Transaction, Category, Savings, PaymentMethod, SavingsTransaction
 
 
 class MyDateTimeFilter(DateFieldListFilter):
@@ -57,9 +57,19 @@ class TransactionAdmin(admin.ModelAdmin):
 
 
 class SavingsAdmin(admin.ModelAdmin):
-    list_display = ('name', 'amount', 'monthly_budgeted_amount')
+    list_display = ('name', 'total', 'monthly_budgeted_amount')
+
+
+class SavingsTransactionAdmin(admin.ModelAdmin):
+    list_display = ('transaction_date_and_store', 'saving', 'amount', 'payment_method', 'notes')
+    list_filter = ('saving', ('transaction_date', MyDateTimeFilter), 'payment_method')
+
+    def transaction_date_and_store(self, obj):
+        return f'{obj.transaction_date.strftime("%b %d")} - {obj.store}'
+    transaction_date_and_store.short_description = 'Transaction'
 
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Savings, SavingsAdmin)
 admin.site.register(Transaction, TransactionAdmin)
+admin.site.register(SavingsTransaction, SavingsTransactionAdmin)
