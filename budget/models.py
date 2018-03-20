@@ -46,7 +46,7 @@ class Transaction(models.Model):
 
 class Savings(models.Model):
     name = models.CharField("Savings Category", unique=True, max_length=255)
-    amount_saved = models.DecimalField(max_digits=6, decimal_places=2)
+    amount = models.DecimalField(max_digits=6, decimal_places=2)
     monthly_budgeted_amount = models.DecimalField(max_digits=6, decimal_places=2)
 
     class Meta:

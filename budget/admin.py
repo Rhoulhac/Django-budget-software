@@ -57,7 +57,7 @@ class TransactionAdmin(admin.ModelAdmin):
 
 
 class SavingsAdmin(admin.ModelAdmin):
-    list_display = ('name', 'monthly_budgeted_amount', 'amount_saved')
+    list_display = ('name', 'amount', 'monthly_budgeted_amount')
 
 
 admin.site.register(Category, CategoryAdmin)
