@@ -1,22 +1,24 @@
 import datetime
 import re
 
-from django.views.generic import ListView
+from django.views.generic import ListView, FormView
 from django.db.models import Sum
+from django.shortcuts import render, redirect
 
-from . import models as mymodels
+from .models import Category, Transaction, SavingsTransaction
+from .forms import SavingsTransactionForm
 
 
 class CategoryListView(ListView):
-    model = mymodels.Category
+    model = Category
 
 
 class TransactionListView(ListView):
-    model = mymodels.Transaction
+    model = Transaction
     ordering = '-purchase_date'
 
     def get_queryset(self):
-        queryset = mymodels.Transaction.objects.all()
+        queryset = Transaction.objects.all()
 
         if self.request.GET.get('filter'):
             selection = self.request.GET.get('filter')
@@ -42,11 +44,11 @@ class CurrentMonthAllListView(TransactionListView):
         context = super().get_context_data(**kwargs)
 
         # Get current month Category amounts
-        current_month_trans = mymodels.Transaction.objects\
+        current_month_trans = Transaction.objects\
             .filter(purchase_date__month=datetime.datetime.now().month)\
             .filter(purchase_date__year=datetime.datetime.now().year)
         cat_spending = {}
-        cats = mymodels.Category.objects.all()
+        cats = Category.objects.all()
         for c in cats:
             cat_spending[c.name] = spending(c.name, trans=current_month_trans)
 
@@ -81,11 +83,11 @@ class PreviousMonthAllListView(TransactionListView):
         context = super().get_context_data(**kwargs)
 
         # Get previous month Category amounts
-        previous_month_trans = mymodels.Transaction.objects \
+        previous_month_trans = Transaction.objects \
             .filter(purchase_date__month=datetime.datetime.now().month - 1) \
             .filter(purchase_date__year=datetime.datetime.now().year)
         cat_spending = {}
-        cats = mymodels.Category.objects.all()
+        cats = Category.objects.all()
         for c in cats:
             cat_spending[c.name] = spending(c.name, trans=previous_month_trans)
 
@@ -122,10 +124,10 @@ class ThreePreviousMonthsAllListView(TransactionListView):
         context['input'] = q
 
         # Get last three months Category amounts
-        three_month_trans = mymodels.Transaction.objects \
+        three_month_trans = Transaction.objects \
             .filter(purchase_date__month__gt=datetime.datetime.now().month - 3)
         cat_spending = {}
-        cats = mymodels.Category.objects.all()
+        cats = Category.objects.all()
         for c in cats:
             cat_spending[c.name] = spending(c.name, trans=three_month_trans)
 
@@ -137,9 +139,9 @@ class ThreePreviousMonthsAllListView(TransactionListView):
 
 def spending(category, trans):
 
-    budget_amount = int(mymodels.Category.objects.get(name=category).budget_amount)
+    budget_amount = int(Category.objects.get(name=category).budget_amount)
     spent = re.findall("\d+\.\d+", str(trans
-                                       .filter(category__in=mymodels.Category.objects.filter(name=category))
+                                       .filter(category__in=Category.objects.filter(name=category))
                                        .aggregate(Sum('amount'))))
     if spent:
         spent = float(spent.pop())
@@ -153,3 +155,21 @@ def spending(category, trans):
         'budg_amt': budget_amount,
         'perc': percent
     }
+
+
+# class SavingsTransactionFormView(FormView):
+#     template_name = 'savings_transaction.html'
+#     form_class = SavingsTransactionForm
+#     success_url = '/savings/transaction/new'
+
+
+def savings_post(request):
+    if request.method == "POST":
+        form = SavingsTransactionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('savings-new')
+    else:
+        form = SavingsTransactionForm()
+
+    return render(request, 'budget/savings_transaction.html', {'form': form})

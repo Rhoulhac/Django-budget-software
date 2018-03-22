@@ -1,6 +1,13 @@
 from django import forms
 
-from .models import Transaction
+from .models import Transaction, SavingsTransaction
+
+
+class SavingsTransactionForm(forms.ModelForm):
+
+    class Meta:
+        model = SavingsTransaction
+        fields = ('saving', 'store', 'amount', 'transaction_date', 'payment_method', 'notes')
 
 
 class TransactionForm(forms.ModelForm):
