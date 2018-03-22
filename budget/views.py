@@ -157,12 +157,6 @@ def spending(category, trans):
     }
 
 
-# class SavingsTransactionFormView(FormView):
-#     template_name = 'savings_transaction.html'
-#     form_class = SavingsTransactionForm
-#     success_url = '/savings/transaction/new'
-
-
 def savings_post(request):
     if request.method == "POST":
         form = SavingsTransactionForm(request.POST)
