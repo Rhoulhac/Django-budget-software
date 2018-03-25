@@ -8,6 +8,14 @@ class SavingsTransactionForm(forms.ModelForm):
     class Meta:
         model = SavingsTransaction
         fields = ('saving', 'store', 'amount', 'transaction_date', 'payment_method', 'notes')
+        widgets = {
+            'saving': forms.Select(attrs={'class': 'form-control'}),
+            'store': forms.Select(attrs={'class': 'form-control'}),
+            'amount': forms.TextInput(attrs={'class': 'form-control'}),
+            'transaction_date': forms.TextInput(attrs={'class': 'form-control'}),
+            'payment_method': forms.Select(attrs={'class': 'form-control'}),
+            'notes': forms.TextInput(attrs={'class': 'form-control'}),
+        }
 
 
 class TransactionForm(forms.ModelForm):

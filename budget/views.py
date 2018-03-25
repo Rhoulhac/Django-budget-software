@@ -1,11 +1,11 @@
 import datetime
 import re
 
-from django.views.generic import ListView, FormView
+from django.views.generic import ListView
 from django.db.models import Sum
 from django.shortcuts import render, redirect
 
-from .models import Category, Transaction, SavingsTransaction
+from .models import Category, Transaction, SavingsTransaction, Savings
 from .forms import SavingsTransactionForm
 
 
@@ -133,6 +133,40 @@ class ThreePreviousMonthsAllListView(TransactionListView):
 
         context['filter'] = 'pastthree'
         context['categories'] = cat_spending
+
+        return context
+
+
+class CurrentSavingsTransactionListView(ListView):
+    model = SavingsTransaction
+    ordering = '-transaction_date'
+
+    def get_queryset(self):
+        """ Show only SavingsTransactions for the current month """
+        queryset = SavingsTransaction.objects.filter(
+            transaction_date__year=datetime.datetime.now().year,
+            transaction_date__month=datetime.datetime.now().month)
+
+        if self.request.GET.get('filter'):
+            selection = self.request.GET.get('filter')
+            if selection == 'All':
+                return queryset
+            else:
+                return queryset.filter(saving__name=selection)
+        else:
+            return queryset
+
+    def get_context_data(self, **kwargs):
+        """ Transform queryset """
+        context = super().get_context_data(**kwargs)
+
+        if self.request.GET.get('filter'):
+            # Selected filter value
+            q = self.request.GET.get('filter')
+            context['input'] = q
+
+        context['filter'] = 'current'
+        context['savings'] = Savings.objects.all()
 
         return context
 

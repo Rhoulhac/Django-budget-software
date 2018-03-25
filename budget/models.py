@@ -51,7 +51,7 @@ class Savings(models.Model):
 
     class Meta:
         verbose_name_plural = 'savings'
-        ordering = ['-monthly_budgeted_amount']
+        ordering = ['name']
 
     def __str__(self):
         return self.name

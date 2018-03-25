@@ -38,7 +38,7 @@ body {
 .top-menu, .top-menu:hover, .top-menu:visited {
     color: #ffffff;
     float: right;
-    font-size: 16pt;
+    font-size: 14pt;
     margin-right: 20px;
 }
 
@@ -58,6 +58,6 @@ body {
     margin-left: 30px;
 }
 
-.select-category-input {
+.select-input {
     margin-left: 30px;
 }

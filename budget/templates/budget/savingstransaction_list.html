@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="col-md-8 margin-trans">
+        {% if filter %}
+            <form method="GET">
+                <h2>Select a Savings category: {% if input %} {{ input }} {% endif %}</h2>
+                <select name="filter">
+                    <option value="">All</option>
+                    {% for saving in savings %}
+                        {% if saving.name == input %}
+                            <option value="{{ saving.name }}" selected>{{ saving.name }}</option>
+                        {% else %}
+                            <option value="{{ saving.name }}">{{ saving.name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <input type="submit" value="Submit" class="select-input">
+            </form>
+        {% endif %}
+
+        {% if savingstransaction_list %}
+            <table class="table">
+                <thead class="table-header">
+                    <tr>
+                        <th>Transaction Date</th>
+                        <th>Amount</th>
+                        <th>Saving</th>
+                        <th>Store</th>
+                        <th>Note</th>
+                    </tr>
+                </thead>
+                {% for trans in savingstransaction_list %}
+                    <tr>
+                        <td>{{ trans.transaction_date }}</td>
+                        <td>{{ trans.amount }}</td>
+                        <td>{{ trans.saving }}</td>
+                        <td>{{ trans.store }}</td>
+                        <td>{{ trans.notes }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+
+        {% else %}
+            <p>There are no transactions!</p>
+
+        {% endif %}
+    </div>
+
+
+{% endblock %}

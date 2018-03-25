@@ -58,6 +58,7 @@ class TransactionAdmin(admin.ModelAdmin):
 
 class SavingsAdmin(admin.ModelAdmin):
     list_display = ('name', 'total', 'monthly_budgeted_amount')
+    ordering = ['-monthly_budgeted_amount']
 
 
 class SavingsTransactionAdmin(admin.ModelAdmin):
