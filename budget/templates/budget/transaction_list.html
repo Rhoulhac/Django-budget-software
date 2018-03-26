@@ -1,23 +1,24 @@
 {% extends 'base.html' %}
 
-
 {% block content %}
 
     <div class="col-md-5 margin-trans">
         {% if filter %}
             <form method="GET">
                 <h2>Select a Category: {% if input %} {{ input }} {% endif %}</h2>
-                <select name="filter">
-                    <option value="">All</option>
-                    {% for category in categories %}
-                        {% if category == input %}
-                            <option value="{{ category }}" selected>{{ category }}</option>
-                        {% else %}
-                            <option value="{{ category }}">{{ category }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-                <input type="submit" value="Submit" class="select-input">
+                <div class="form-group col-md-4">
+                    <select name="filter" class="form-control">
+                        <option value="">All</option>
+                        {% for category in categories %}
+                            {% if category == input %}
+                                <option value="{{ category }}" selected>{{ category }}</option>
+                            {% else %}
+                                <option value="{{ category }}">{{ category }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <input type="submit" value="Submit" class="btn btn-default select-input">
             </form>
         {% endif %}
 
