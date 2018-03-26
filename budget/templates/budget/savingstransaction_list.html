@@ -2,21 +2,23 @@
 
 {% block content %}
 
-    <div class="col-md-8 margin-trans">
+    <div class="col-md-7 margin-trans">
         {% if filter %}
             <form method="GET">
                 <h2>Select a Savings category: {% if input %} {{ input }} {% endif %}</h2>
-                <select name="filter">
-                    <option value="">All</option>
-                    {% for saving in savings %}
-                        {% if saving.name == input %}
-                            <option value="{{ saving.name }}" selected>{{ saving.name }}</option>
-                        {% else %}
-                            <option value="{{ saving.name }}">{{ saving.name }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-                <input type="submit" value="Submit" class="select-input">
+                <div class="form-group col-md-4">
+                    <select name="filter" class="form-control">
+                        <option value="">All</option>
+                        {% for saving in savings %}
+                            {% if saving.name == input %}
+                                <option value="{{ saving.name }}" selected>{{ saving.name }}</option>
+                            {% else %}
+                                <option value="{{ saving.name }}">{{ saving.name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <input type="submit" value="Submit" class="btn btn-default select-input">
             </form>
         {% endif %}
 
