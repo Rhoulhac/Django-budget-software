@@ -142,10 +142,8 @@ class CurrentSavingsTransactionListView(ListView):
     ordering = '-transaction_date'
 
     def get_queryset(self):
-        """ Show only SavingsTransactions for the current month """
-        queryset = SavingsTransaction.objects.filter(
-            transaction_date__year=datetime.datetime.now().year,
-            transaction_date__month=datetime.datetime.now().month)
+        """ Show all SavingsTransactions """
+        queryset = SavingsTransaction.objects.all()
 
         if self.request.GET.get('filter'):
             selection = self.request.GET.get('filter')
