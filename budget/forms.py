@@ -12,7 +12,7 @@ class SavingsTransactionForm(forms.ModelForm):
             'saving': forms.Select(attrs={'class': 'form-control'}),
             'store': forms.Select(attrs={'class': 'form-control'}),
             'amount': forms.TextInput(attrs={'class': 'form-control'}),
-            'transaction_date': forms.TextInput(attrs={'class': 'form-control'}),
+            'transaction_date': forms.TextInput(attrs={'class': 'form-control datepicker'}),
             'payment_method': forms.Select(attrs={'class': 'form-control'}),
             'notes': forms.TextInput(attrs={'class': 'form-control'}),
         }
