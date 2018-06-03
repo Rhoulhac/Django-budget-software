@@ -192,8 +192,12 @@ def spending(category, trans):
 def savings_post(request):
     if request.method == "POST":
         form = SavingsTransactionForm(request.POST)
+
         if form.is_valid():
-            form.save()
+            form_update = form.save(commit=False)
+            form_update.amount = form_update.amount * -1
+            form_update.save()
+
             return redirect('savings-new')
     else:
         form = SavingsTransactionForm()
