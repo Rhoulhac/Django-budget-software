@@ -20,6 +20,10 @@ class TransactionListView(ListView):
     def get_queryset(self):
         queryset = Transaction.objects.all()
 
+        if self.request.GET.get('transactionMonth'):
+            month_year = self.request.GET.get('transactionMonth').split('/')
+            queryset = queryset.filter(purchase_date__month=month_year[0]).filter(purchase_date__year=month_year[1])
+
         if self.request.GET.get('filter'):
             selection = self.request.GET.get('filter')
             if selection == 'All':
@@ -29,109 +33,41 @@ class TransactionListView(ListView):
         else:
             return queryset
 
-
-class CurrentMonthAllListView(TransactionListView):
-
-    def get_queryset(self):
-        """ Show only Transactions for the current month """
-        queryset = super(CurrentMonthAllListView, self).get_queryset().filter(
-            purchase_date__year=datetime.datetime.now().year,
-            purchase_date__month=datetime.datetime.now().month)
-        return queryset
-
     def get_context_data(self, **kwargs):
         """ Transform queryset """
         context = super().get_context_data(**kwargs)
 
-        # Get current month Category amounts
-        current_month_trans = Transaction.objects\
-            .filter(purchase_date__month=datetime.datetime.now().month)\
-            .filter(purchase_date__year=datetime.datetime.now().year)
+        if self.request.GET.get('transactionMonth'):
+            # Get selected month transactions
+            month_year = self.request.GET.get('transactionMonth')
+            context['monthYear'] = month_year
+            month_year_split = month_year.split('/')
+            monthly_transactions = Transaction.objects \
+                .filter(purchase_date__month=month_year_split[0]) \
+                .filter(purchase_date__year=month_year_split[1])
+
+        else:
+            # Get current month transactions
+            monthly_transactions = Transaction.objects\
+                .filter(purchase_date__month=datetime.datetime.now().month)\
+                .filter(purchase_date__year=datetime.datetime.now().year)
+
         cat_spending = {}
         cats = Category.objects.all()
         for c in cats:
-            cat_spending[c.name] = spending(c.name, trans=current_month_trans)
+            cat_spending[c.name] = spending(c.name, trans=monthly_transactions)
 
         if self.request.GET.get('filter'):
-            # Selected filter value
+            # Selected category filter value
             q = self.request.GET.get('filter')
-            context['input'] = q
+            context['category'] = q
 
             # Queryset for graph
-            cat_set = current_month_trans.filter(category__name=q).values('store__name') \
+            cat_set = monthly_transactions.filter(category__name=q).values('store__name') \
                 .order_by('store__name').distinct().annotate(Sum('amount'))
             context['filter_graph_set'] = cat_set
 
         context['filter'] = 'current'
-        context['categories'] = cat_spending
-
-        return context
-
-
-class PreviousMonthAllListView(TransactionListView):
-
-    def get_queryset(self):
-        """ Show only Transactions for the previous month """
-        queryset = super(PreviousMonthAllListView, self).get_queryset().filter(
-            purchase_date__year=datetime.datetime.now().year,
-            purchase_date__month=datetime.datetime.now().month - 1)
-
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        """ Transform queryset """
-        context = super().get_context_data(**kwargs)
-
-        # Get previous month Category amounts
-        previous_month_trans = Transaction.objects \
-            .filter(purchase_date__month=datetime.datetime.now().month - 1) \
-            .filter(purchase_date__year=datetime.datetime.now().year)
-        cat_spending = {}
-        cats = Category.objects.all()
-        for c in cats:
-            cat_spending[c.name] = spending(c.name, trans=previous_month_trans)
-
-        if self.request.GET.get('filter'):
-            # Selected filter value
-            q = self.request.GET.get('filter')
-            context['input'] = q
-
-            # Queryset for graph
-            cat_set = previous_month_trans.filter(category__name=q).values('store__name') \
-                .order_by('store__name').distinct().annotate(Sum('amount'))
-            context['filter_graph_set'] = cat_set
-
-        context['filter'] = 'previous'
-        context['categories'] = cat_spending
-
-        return context
-
-
-class ThreePreviousMonthsAllListView(TransactionListView):
-
-    def get_queryset(self):
-        """ Show Transactions for the previous 3 months """
-        queryset = super(ThreePreviousMonthsAllListView, self).get_queryset().filter(
-            purchase_date__month__gt=datetime.datetime.now().month - 3)
-
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        """ Transform queryset """
-        context = super().get_context_data(**kwargs)
-        # Filter value
-        q = self.request.GET.get('filter')
-        context['input'] = q
-
-        # Get last three months Category amounts
-        three_month_trans = Transaction.objects \
-            .filter(purchase_date__month__gt=datetime.datetime.now().month - 3)
-        cat_spending = {}
-        cats = Category.objects.all()
-        for c in cats:
-            cat_spending[c.name] = spending(c.name, trans=three_month_trans)
-
-        context['filter'] = 'pastthree'
         context['categories'] = cat_spending
 
         return context

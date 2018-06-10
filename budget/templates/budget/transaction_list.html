@@ -3,24 +3,41 @@
 {% block content %}
 
     <div class="col-md-5 margin-trans">
-        {% if filter %}
-            <form method="GET">
-                <h2>Select a Category: {% if input %} {{ input }} {% endif %}</h2>
-                <div class="form-group col-md-4">
-                    <select name="filter" class="form-control">
-                        <option value="">All</option>
-                        {% for category in categories %}
-                            {% if category == input %}
-                                <option value="{{ category }}" selected>{{ category }}</option>
-                            {% else %}
-                                <option value="{{ category }}">{{ category }}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                </div>
-                <input type="submit" value="Submit" class="btn btn-default select-input">
-            </form>
-        {% endif %}
+        <form method="GET">
+            {% if monthYear %}
+                <h2>Selected Month: {{ monthYear }}</h2>
+            {% else %}
+                <h2>Select a Month: </h2>
+            {% endif %}
+            <div class="form-group">
+                <input name="transactionMonth"
+                       id="transactionMonth"
+                       class="date-picker"
+                       value="{{ monthYear }}"
+                       autocomplete="off"
+                />
+            </div>
+
+            {% if category %}
+                <h2>Selected Category: {{ category }}</h2>
+            {% else %}
+                <h2>Select a Category: </h2>
+            {% endif %}
+            <div class="form-group col-md-4">
+                <select name="filter" class="form-control">
+                    <option value="">All</option>
+                    {% for cat in categories %}
+                        {% if cat == category %}
+                            <option value="{{ cat }}" selected>{{ cat }}</option>
+                        {% else %}
+                            <option value="{{ cat }}">{{ cat }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <input type="submit" value="Submit" class="btn btn-default select-input">
+        </form>
 
         {% if transaction_list %}
             <table class="table">
@@ -52,26 +69,22 @@
     </div>
 
     <div class="col-md-5 col-md-offset-1">
-        {% if filter %}
-            {% if not input %}
-                <div>
-                    {% for cat, nums in categories.items %}
-                            {{ cat }} Budget: <strong> {{ nums.budg_amt }} </strong>
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" style="width: {{ nums.perc }}%;"
-                                     aria-valuenow="{{ nums.perc }}" aria-valuemin="0" aria-valuemax="100">
-                                    {{nums.spent}}</div>
-                            </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-            {% if filter != 'pastthree' %}
-                <div>
-                    <h2>Pie chart</h2>
-                    <canvas id="myChart" width="400" height="400"></canvas>
-                </div>
-            {% endif %}
+        {% if not category %}
+            <div>
+                {% for cat, nums in categories.items %}
+                    {{ cat }} Budget: <strong> {{ nums.budg_amt }} </strong>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: {{ nums.perc }}%;"
+                             aria-valuenow="{{ nums.perc }}" aria-valuemin="0" aria-valuemax="100">
+                            {{nums.spent}}</div>
+                    </div>
+                {% endfor %}
+            </div>
         {% endif %}
+        <div>
+            <h2>Pie chart</h2>
+            <canvas id="myChart" width="400" height="400"></canvas>
+        </div>
     </div>
 
 
@@ -81,105 +94,153 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 <script>
 
-    {% if filter == 'current' or filter == 'previous' %}
+    var ctx = document.getElementById('myChart').getContext('2d');
 
-        var ctx = document.getElementById('myChart').getContext('2d');
+    // 12 color options - should be enough
+    var background = [
+    'rgba(127, 191, 63, 0.2)',
+    'rgba(255, 99, 132, 0.2)',
+    'rgba(54, 162, 235, 0.2)',
+    'rgba(255, 206, 86, 0.2)',
+    'rgba(140, 114, 127, 0.2)',
+    'rgba(191, 63, 191, 0.2)',
+    'rgba(153, 102, 255, 0.2)',
+    'rgba(75, 192, 192, 0.2)',
+    'rgba(191, 63, 63, 0.2)',
+    'rgba(227, 225, 93, 0.2)',
+    'rgba(63, 191, 191, 0.2)',
+    'rgba(191, 127, 63, 0.2)',
+    ]
+    var border = [
+    'rgba(127, 191, 63, 1)',
+    'rgba(255,99,132,1)',
+    'rgba(54, 162, 235, 1)',
+    'rgba(255, 206, 86, 1)',
+    'rgba(140, 114, 127, 1)',
+    'rgba(191, 63, 191, 1)',
+    'rgba(153, 102, 255, 1)',
+    'rgba(75, 192, 192, 1)',
+    'rgba(191, 63, 63, 1)',
+    'rgba(227, 225, 93, 1)',
+    'rgba(63, 191, 191, 1)',
+    'rgba(191, 127, 63, 1)',
+    ]
 
-        // 12 color options - should be enough
-        var background = [
-        'rgba(127, 191, 63, 0.2)',
-        'rgba(255, 99, 132, 0.2)',
-        'rgba(54, 162, 235, 0.2)',
-        'rgba(255, 206, 86, 0.2)',
-        'rgba(140, 114, 127, 0.2)',
-        'rgba(191, 63, 191, 0.2)',
-        'rgba(153, 102, 255, 0.2)',
-        'rgba(75, 192, 192, 0.2)',
-        'rgba(191, 63, 63, 0.2)',
-        'rgba(227, 225, 93, 0.2)',
-        'rgba(63, 191, 191, 0.2)',
-        'rgba(191, 127, 63, 0.2)',
-        ]
-        var border = [
-        'rgba(127, 191, 63, 1)',
-        'rgba(255,99,132,1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 206, 86, 1)',
-        'rgba(140, 114, 127, 1)',
-        'rgba(191, 63, 191, 1)',
-        'rgba(153, 102, 255, 1)',
-        'rgba(75, 192, 192, 1)',
-        'rgba(191, 63, 63, 1)',
-        'rgba(227, 225, 93, 1)',
-        'rgba(63, 191, 191, 1)',
-        'rgba(191, 127, 63, 1)',
-        ]
+    var labels = []
+    var data = []
+    var backgroundColor = []
+    var borderColor = []
+    var item = 0
 
-        var labels = []
-        var data = []
-        var backgroundColor = []
-        var borderColor = []
-        var item = 0
+    {% if category %}
+        var text = '{{ category }} Spending'
+        {% for item in filter_graph_set %}
+            // Find a way to combine amounts from the same store
+            labels.push("{{ item.store__name|safe }}");
+            data.push({{ item.amount__sum }});
+            backgroundColor.push(background[item]);
+            borderColor.push(border[item]);
+            item++
+        {% endfor %}
 
-        {% if input %}
-            var text = '{{ input }} Spending'
-            {% for item in filter_graph_set %}
-                // Find a way to combine amounts from the same store
-                labels.push("{{ item.store__name|safe }}");
-                data.push({{ item.amount__sum }});
-                backgroundColor.push(background[item]);
-                borderColor.push(border[item]);
-                item++
-            {% endfor %}
+    {% else %}
+        var text = 'Category Spending'
+        {% for cat, nums in categories.items %}
+            labels.push('{{ cat }}');
+            data.push({{ nums.spent }});
+            backgroundColor.push(background[item]);
+            borderColor.push(border[item]);
+            item++
+        {% endfor %}
 
-        {% else %}
-            var text = 'Category Spending'
-            {% for cat, nums in categories.items %}
-                labels.push('{{ cat }}');
-                data.push({{ nums.spent }});
-                backgroundColor.push(background[item]);
-                borderColor.push(border[item]);
-                item++
-            {% endfor %}
+    {% endif %}
 
-        {% endif %}
+    var myChart = new Chart(ctx, {
+        // The type of chart
+        type: 'doughnut',
 
-        var myChart = new Chart(ctx, {
-            // The type of chart
-            type: 'doughnut',
+        // The data for categories
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                label: text,
+                backgroundColor: backgroundColor,
+                borderColor: borderColor,
+                borderWidth: 1,
+            }]
+        },
 
-            // The data for categories
-            data: {
-                labels: labels,
-                datasets: [{
-                    data: data,
-                    label: text,
-                    backgroundColor: backgroundColor,
-                    borderColor: borderColor,
-                    borderWidth: 1,
-                }]
+        // Configuration options go here
+        options: {
+            cutoutPercentage: 35,
+            title: {
+                display: true,
+                text: text,
+                position: 'bottom',
+                fontSize: 20
             },
-
-            // Configuration options go here
-            options: {
-                cutoutPercentage: 35,
-                title: {
-                    display: true,
-                    text: text,
-                    position: 'bottom',
-                    fontSize: 20
-                },
-                legend: {
-                    labels: {
-                        fontSize: 16
-                    }
+            legend: {
+                labels: {
+                    fontSize: 16
                 }
             }
-        });
-    {% endif %}
+        }
+    });
 </script>
+
+
+    <script>
+
+
+    $(function() {
+        $('.date-picker').datepicker(
+            {
+                dateFormat: "mm/yy",
+                changeMonth: true,
+                changeYear: true,
+                showButtonPanel: true,
+                onClose: function(dateText, inst) {
+
+
+                    function isDonePressed(){
+                        return ($('#ui-datepicker-div').html().indexOf('ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all ui-state-hover') > -1);
+                    }
+
+                    if (isDonePressed()){
+                        var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                        var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                        $(this).datepicker('setDate', new Date(year, month, 1)).trigger('change');
+
+                         $('.date-picker').focusout()  //Added to remove focus from datepicker input box on selecting date
+                    }
+            },
+            beforeShow : function(input, inst) {
+
+                inst.dpDiv.addClass('month_year_datepicker')
+
+                if ((datestr = $(this).val()).length > 0) {
+                    year = datestr.substring(datestr.length-4, datestr.length);
+                    month = datestr.substring(0, 2);
+                    $(this).datepicker('option', 'defaultDate', new Date(year, month-1, 1));
+                    $(this).datepicker('setDate', new Date(year, month-1, 1));
+                    $(".ui-datepicker-calendar").hide();
+                }
+            }
+        })
+    });
+    </script>
+    <style>
+        .ui-datepicker-calendar {
+            display: none;
+        }
+    </style>
 
 
 {% endblock after_javascript %}

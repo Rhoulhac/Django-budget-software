@@ -14,16 +14,13 @@
             <nav class="navbar">
                 <a href="/" class="title">Budgeting Software</a>
                 <a href="{% url 'current-month-saving' %}" class="top-menu">
-                    <span class="glyphicon glyphicon-usd"></span> Current Month Savings Transaction
+                    <span class="glyphicon glyphicon-usd"></span> Savings Transactions
                 </a>
                 <a href="{% url 'savings-new' %}" class="top-menu">
                     <span class="glyphicon glyphicon-plus"></span> Add New Savings Transaction
                 </a>
-                <a href="{% url 'previous-month-spending' %}" class="top-menu">
-                    <span class="glyphicon glyphicon-calendar"></span> Previous Monthly Spending
-                </a>
-                <a href="{% url 'current-month-spending' %}" class="top-menu">
-                    <span class="glyphicon glyphicon-calendar"></span> Current Monthly Spending
+                <a href="{% url 'selected-month-spending' %}" class="top-menu">
+                    <span class="glyphicon glyphicon-calendar"></span> Monthly Spending
                 </a>
             </nav>
         </div>
