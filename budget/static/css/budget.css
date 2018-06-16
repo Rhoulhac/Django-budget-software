@@ -61,3 +61,8 @@ body {
 .select-input {
     margin-left: 30px;
 }
+
+.selected-month-transaction-datepicker-div {
+    width: 100px;
+    padding-left: 15px;
+}
