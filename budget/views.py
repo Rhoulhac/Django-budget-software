@@ -70,6 +70,9 @@ class TransactionListView(ListView):
         context['filter'] = 'current'
         context['categories'] = cat_spending
 
+        context['background'] = get_colors('0.2')
+        context['border'] = get_colors('1')
+
         return context
 
 
@@ -139,3 +142,21 @@ def savings_post(request):
         form = SavingsTransactionForm()
 
     return render(request, 'budget/savings_transaction.html', {'form': form})
+
+
+def get_colors(transparency):
+    # 12 color options - should be enough
+    return [
+        f'rgba(127, 191, 63, {transparency})',
+        f'rgba(255, 99, 132, {transparency})',
+        f'rgba(54, 162, 235, {transparency})',
+        f'rgba(255, 206, 86, {transparency})',
+        f'rgba(140, 114, 127, {transparency})',
+        f'rgba(191, 63, 191, {transparency})',
+        f'rgba(153, 102, 255, {transparency})',
+        f'rgba(75, 192, 192, {transparency})',
+        f'rgba(191, 63, 63, {transparency})',
+        f'rgba(227, 225, 93, {transparency})',
+        f'rgba(63, 191, 191, {transparency})',
+        f'rgba(191, 127, 63, {transparency})',
+    ]

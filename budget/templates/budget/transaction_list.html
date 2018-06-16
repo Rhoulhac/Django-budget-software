@@ -103,7 +103,7 @@
         {% if filter_graph_set %}
             let filterGraphSet = {};
             {% for item in filter_graph_set %}
-                filterGraphSet["{{ item.store__name|safe }}"] = {{ item.amount__sum }}
+                filterGraphSet["{{ item.store__name|safe }}"] = {{ item.amount__sum }};
             {% endfor %}
         {% else %}
             var filterGraphSet = null;
@@ -112,10 +112,28 @@
         {% if categories %}
             let categories = {};
             {% for cat, nums in categories.items %}
-                categories["{{ cat|safe }}"] = {{ nums.spent }}
+                categories["{{ cat|safe }}"] = {{ nums.spent }};
             {% endfor %}
         {% else %}
             var categories = null;
+        {% endif %}
+
+        {% if background %}
+            let background = [];
+            {% for color in background %}
+                background.push('{{color}}');
+            {% endfor %}
+        {% else %}
+            var background = null;
+        {% endif %}
+
+        {% if border %}
+            let border = [];
+            {% for border_color in border %}
+                border.push('{{border_color}}');
+            {% endfor %}
+        {% else %}
+            var border = null;
         {% endif %}
     </script>
 
