@@ -66,3 +66,23 @@ body {
     width: 100px;
     padding-left: 15px;
 }
+
+.Household {
+    background-color: rgba(127, 191, 63, 0.2);
+}
+
+.Dining {
+    background-color: rgba(255, 99, 132, 0.2);
+}
+
+.Work {
+    background-color: rgba(54, 162, 235, 0.2);
+}
+
+.Blow {
+    background-color: rgba(255, 206, 86, 0.2);
+}
+
+.Gas {
+    background-color: rgba(140, 114, 127, 0.2);
+}

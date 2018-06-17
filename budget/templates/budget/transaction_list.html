@@ -52,7 +52,7 @@
                     </tr>
                 </thead>
                 {% for trans in transaction_list %}
-                    <tr>
+                    <tr {% if not category %} class="{{trans.category.name}}" {% endif %}>
                         <td>{{ trans.purchase_date }}</td>
                         <td>{{ trans.amount }}</td>
                         <td>{{ trans.category }}</td>
