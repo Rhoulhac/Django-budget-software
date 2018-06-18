@@ -75,7 +75,7 @@
                 {% for cat, nums in categories.items %}
                     {{ cat }} Budget: <strong> {{ nums.budg_amt }} </strong>
                     <div class="progress">
-                        <div class="progress-bar" role="progressbar" style="width: {{ nums.perc }}%;"
+                        <div class="progress-bar {{nums.color}}" role="progressbar" style="width: {{ nums.perc }}%"
                              aria-valuenow="{{ nums.perc }}" aria-valuemin="0" aria-valuemax="100">
                             {{nums.spent}}</div>
                     </div>

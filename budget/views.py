@@ -119,10 +119,21 @@ def spending(category, trans):
         spent = 0
         percent = 0
 
+    if percent > 100:
+        percent = 100
+
+    if percent <= 50:
+        color = 'progress-bar-success'
+    elif percent <= 90:
+        color = 'progress-bar-warning'
+    else:
+        color = 'progress-bar-danger'
+
     return {
         'spent': spent,
         'budg_amt': budget_amount,
-        'perc': percent
+        'perc': percent,
+        'color': color
     }
 
 
