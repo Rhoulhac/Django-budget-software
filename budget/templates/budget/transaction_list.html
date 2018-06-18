@@ -20,7 +20,7 @@
             </div>
 
             {% if category %}
-                <h2>Selected Category: {{ category }}</h2>
+                <h2>Selected Category: {{ category.name }}  ${{category.spent}}</h2>
             {% else %}
                 <h2>Select a Category: </h2>
             {% endif %}
@@ -28,7 +28,7 @@
                 <select name="filter" class="form-control">
                     <option value="">All</option>
                     {% for cat in categories %}
-                        {% if cat == category %}
+                        {% if cat == category.name %}
                             <option value="{{ cat }}" selected>{{ cat }}</option>
                         {% else %}
                             <option value="{{ cat }}">{{ cat }}</option>
@@ -70,7 +70,7 @@
     </div>
 
     <div class="col-md-5 col-md-offset-1">
-        {% if not category %}
+        {% if monthYear and not category %}
             <div>
                 {% for cat, nums in categories.items %}
                     {{ cat }} Budget: <strong> {{ nums.budg_amt }} </strong>
@@ -95,7 +95,7 @@
 
     <script type="text/javascript">
         {% if category %}
-            var category = "{{category}}";
+            var category = "{{category.name}}";
         {% else %}
             var category = null;
         {% endif %}

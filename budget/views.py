@@ -48,9 +48,7 @@ class TransactionListView(ListView):
 
         else:
             # Get current month transactions
-            monthly_transactions = Transaction.objects\
-                .filter(purchase_date__month=datetime.datetime.now().month)\
-                .filter(purchase_date__year=datetime.datetime.now().year)
+            monthly_transactions = Transaction.objects.all()
 
         cat_spending = {}
         cats = Category.objects.all()
@@ -60,16 +58,16 @@ class TransactionListView(ListView):
         if self.request.GET.get('filter'):
             # Selected category filter value
             q = self.request.GET.get('filter')
-            context['category'] = q
+            category = cat_spending[q]
+            category['name'] = q
+            context['category'] = category
 
             # Queryset for graph
             cat_set = monthly_transactions.filter(category__name=q).values('store__name') \
                 .order_by('store__name').distinct().annotate(Sum('amount'))
             context['filter_graph_set'] = cat_set
 
-        context['filter'] = 'current'
         context['categories'] = cat_spending
-
         context['background'] = get_colors('0.2')
         context['border'] = get_colors('1')
 
