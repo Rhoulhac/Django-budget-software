@@ -9,10 +9,9 @@
         <link rel="stylesheet" href="{% static 'css/budget.css' %}">
     </head>
     <body>
-        <!--<div class="page-header">-->
         <div class="m-b-1 page-header">
             <nav class="navbar">
-                <a href="/" class="title">Budgeting Software</a>
+                <a href="{% url 'all-monthly-totals' %}" class="title">Budgeting Software</a>
                 <a href="{% url 'current-month-saving' %}" class="top-menu">
                     <span class="glyphicon glyphicon-usd"></span> Savings Transactions
                 </a>

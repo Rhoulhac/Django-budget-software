@@ -1,8 +1,9 @@
-import datetime
 import re
+import datetime
 
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
 from django.db.models import Sum
+from django.db.models.functions import ExtractMonth, ExtractYear
 from django.shortcuts import render, redirect
 
 from .models import Category, Transaction, SavingsTransaction, Savings
@@ -103,6 +104,24 @@ class CurrentSavingsTransactionListView(ListView):
         context['filter'] = 'current'
         context['savings'] = Savings.objects.all()
 
+        return context
+
+
+class AllMonthlyTotalsView(TemplateView):
+    template_name = 'budget/allmonthlytotals_list.html'
+    queryset = Transaction.objects \
+        .annotate(month=ExtractMonth('purchase_date'), year=ExtractYear('purchase_date')) \
+        .values('month', 'year') \
+        .order_by('month', 'year') \
+        .annotate(Sum('amount'))
+
+    for month in queryset:
+        month['month'] = datetime.date(1900, month['month'], 1).strftime('%B')
+
+    def get_context_data(self, **kwargs):
+        context = ({
+            'queryset': self.queryset,
+        })
         return context
 
 
