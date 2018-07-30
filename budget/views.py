@@ -116,7 +116,7 @@ class AllMonthlyTotalsView(TemplateView):
         .annotate(Sum('amount'))
 
     for month in queryset:
-        month['month'] = datetime.date(1900, month['month'], 1).strftime('%B')
+        month['month'] = [datetime.date(1900, month['month'], 1).strftime('%B'), month['month']]
 
     def get_context_data(self, **kwargs):
         context = ({

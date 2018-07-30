@@ -15,7 +15,11 @@
                 </thead>
                 {% for item in queryset %}
                     <tr>
-                        <td>{{ item.month }}</td>
+                        <td>
+                            <a href="transactions/?transactionMonth={{ item.month.1 }}%2F{{ item.year }}">
+                                {{ item.month.0 }}
+                            </a>
+                        </td>
                         <td>{{ item.year }}</td>
                         <td>{{ item.amount__sum }}</td>
                     </tr>
