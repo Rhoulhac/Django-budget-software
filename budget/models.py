@@ -43,7 +43,6 @@ class Transaction(models.Model):
     def __str__(self):
         return f'{self.purchase_date} {self.category} - {self.store}'
 
-
 class Savings(models.Model):
     name = models.CharField("Savings Category", unique=True, max_length=255)
     total = models.DecimalField(max_digits=6, decimal_places=2)

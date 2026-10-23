@@ -7,7 +7,7 @@ from django.db.models.functions import ExtractMonth, ExtractYear
 from django.shortcuts import render, redirect
 
 from .models import Category, Transaction, SavingsTransaction, Savings
-from .forms import SavingsTransactionForm
+from .forms import SavingsTransactionForm, TransactionForm
 
 
 class CategoryListView(ListView):
@@ -170,6 +170,23 @@ def savings_post(request):
         form = SavingsTransactionForm()
 
     return render(request, 'budget/savings_transaction.html', {'form': form})
+
+
+def transaction_post(request):
+    if request.method == "POST":
+        form = TransactionForm(request.POST)
+
+        if form.is_valid():
+            form_update = form.save(commit=False)
+            form_update.amount = form_update.amount
+            # form_update.amount = form_update.amount * -1
+            form_update.save()
+
+            return redirect('transaction-new')
+    else:
+        form = TransactionForm()
+
+    return render(request, 'budget/add_transaction.html', {'form': form})
 
 
 def get_colors(transparency):
