@@ -9,7 +9,6 @@ urlpatterns = [
     path('categories/', CategoryListView.as_view()),
     path('transactions/', TransactionListView.as_view(), name='selected-month-spending'),
     path('transaction/new', transaction_post, name='transaction-new'),
-    path('transactions/import', transaction_post, name='transactions-import'),
     path('savings/transactions', CurrentSavingsTransactionListView.as_view(), name='current-month-saving'),
     path('savings/transaction/new', savings_post, name='savings-new')
 ]

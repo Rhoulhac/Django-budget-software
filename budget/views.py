@@ -179,7 +179,6 @@ def transaction_post(request):
         if form.is_valid():
             form_update = form.save(commit=False)
             form_update.amount = form_update.amount
-            # form_update.amount = form_update.amount * -1
             form_update.save()
 
             return redirect('transaction-new')

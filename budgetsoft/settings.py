@@ -25,7 +25,7 @@ SECRET_KEY = 'oc4)^wch(f&u#=((tl4iqi0at2g!)p0qxzzv*voe-+7xg#5gnr'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.1.7']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -37,13 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'django_extensions',
-    'budget',
-    'corsheaders'
+    'django_extensions',
+    'budget'
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -52,14 +50,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-# CORS stuff
-CORS_ORIGIN_ALLOW_ALL = True
-# CORS_ALLOW_CREDENTIALS = True
-# CORS_ORIGIN_REGEX_WHITELIST = [
-#      r"^http://.*\.?localhost:8000",
-#      r"^http://.*\.?local:8000"
-# ]
 
 ROOT_URLCONF = 'budgetsoft.urls'
 
