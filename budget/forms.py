@@ -23,6 +23,13 @@ class TransactionForm(forms.ModelForm):
     class Meta:
         model = Transaction
         fields = ('store', 'amount', 'purchase_date', 'category', 'payment_method')
+        widgets = {
+            'store': forms.Select(attrs={'class': 'form-control'}),
+            'amount': forms.TextInput(attrs={'class': 'form-control'}),
+            'purchase_date': forms.TextInput(attrs={'class': 'form-control datepicker'}),
+            'payment_method': forms.Select(attrs={'class': 'form-control'}),
+            'notes': forms.TextInput(attrs={'class': 'form-control'}),
+        }
 
 
 class CurrentMonthAll(forms.ModelForm):

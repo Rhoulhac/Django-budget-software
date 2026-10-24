@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="col-md-5 margin-trans">
+
+        <h2>New Transaction</h2>
+        <form method="POST" class="post-form">
+            {% csrf_token %}
+
+            <div class="form-group">
+                {{ form.as_p }}
+            </div>
+
+            <button type="submit" class="save btn btn-default">Save</button>
+        </form>
+
+    </div>
+
+{% endblock %}
+
+{% block after_javascript %}
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script>
+    $(function() {
+        $( ".datepicker" ).datepicker({
+            changeMonth: true,
+            changeYear: true,
+        }).datepicker("setDate", new Date());;
+    });
+    </script>
+
+{% endblock after_javascript %}
